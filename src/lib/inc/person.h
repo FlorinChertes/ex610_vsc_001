@@ -11,10 +11,15 @@ public:
     ~Person();
 
     Person& operator =(const Person& rhs);
+    Person(const Person& other);
 
-    void swap(Person& other);      
+    Person& operator =(Person&& rhs);
+    Person(Person&& other);
+
+
+    void swap(Person& other);
     const std::string& get_name();
-    const std::string& get_family();    
+    const std::string& get_family();
 
 private:
     std::string m_first_name;

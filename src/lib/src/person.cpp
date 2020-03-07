@@ -9,7 +9,6 @@ Person::Person(const std::string& first_name,
 
 Person::~Person()
 {
-    
 }
 
 Person& Person::operator =(const Person& rhs)
@@ -18,6 +17,26 @@ Person& Person::operator =(const Person& rhs)
     swap(tmp);
     return *this;
 }
+
+Person::Person(const Person& other)
+    : m_first_name(other.m_first_name)
+    , m_second_name(other.m_second_name)
+{
+}
+
+Person& Person::operator =(Person&& rhs)
+{
+    Person tmp(std::move(rhs));
+    swap(tmp);
+    return *this;
+}
+
+Person::Person(Person&& other)
+    : m_first_name(std::move(other.m_first_name))
+    , m_second_name(std::move(other.m_second_name))
+{
+}
+
 
 void Person::swap(Person& other)
 {
