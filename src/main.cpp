@@ -15,10 +15,11 @@ int main()
    test_person_elision_copy();  
    test_person_lvalue();
 
-   test_func_02();
    test_func_02_01();
    test_func_02_02();
    test_func_02_03();
+   test_func_02_04();
+   test_func_02_05();
 
    return 0;
 }
