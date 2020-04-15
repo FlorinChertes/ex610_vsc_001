@@ -62,7 +62,7 @@ public:
 class Contribution_map
 {
 public:
-    constexpr static const auto defaultStorageName = "default";
+    static constexpr char defaultStorageName[] = "default";
 
 	using Storage = std::unordered_map<std::string, Contribution_basis::Ptr>;
 
