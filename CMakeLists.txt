@@ -34,8 +34,14 @@ add_executable(ex610_vsc_001
 
 	src/test/inc/test_func_01.h
 	src/test/src/test_func_01.cpp
+	src/test/inc/test_func_02.h
+	src/test/src/test_func_02.cpp
+
 
 	src/lib/inc/person.h
 	src/lib/src/person.cpp
+	src/lib/inc/clip.h
+	src/lib/src/clip.cpp
+
 
 )
