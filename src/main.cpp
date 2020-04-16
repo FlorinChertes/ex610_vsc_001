@@ -20,6 +20,10 @@ int main()
    test_func_02_03();
    test_func_02_04();
    test_func_02_05();
+   test_func_02_06();
+   test_func_02_07();
+   test_func_02_08();
+   test_func_02_09();
 
    return 0;
 }

@@ -13,11 +13,11 @@ ELSE ()
 	SET(GCC_STD_CPP_2A_COMPILE_FLAGS "-std=c++2a")
 	SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_STD_CPP_2A_COMPILE_FLAGS}")
 
-	SET(GCC_STD_CPP_CONCEPTS_COMPILE_FLAGS "-fconcepts")
-	SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_STD_CPP_CONCEPTS_COMPILE_FLAGS}")
+	set(BOOST_MIN_VERSION "1.54.0")
+	find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS serialization system filesystem REQUIRED)
 
-	SET(GCC_STD_CPP_PERMISIV_COMPILE_FLAGS "-fpermissive")
-	SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_STD_CPP_PERMISIV_COMPILE_FLAGS}")
+	add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
+
 ENDIF () 
 
 # include directories
@@ -43,5 +43,9 @@ add_executable(ex610_vsc_001
 	src/lib/inc/clip.h
 	src/lib/src/clip.cpp
 
+	src/lib/inc/write_to_disk.h
+	src/lib/src/write_to_disk.cpp
+
+	src/lib/inc/component.h
 
 )

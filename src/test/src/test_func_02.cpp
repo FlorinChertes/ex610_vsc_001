@@ -10,14 +10,11 @@ void test_func_02_01()
 {
 	std::cout << "test_func_02_01" << std::endl;
 
-	Contribution_typed<std::string> contribution_s;
-	contribution_s.set("Adam");
-	std::cout << contribution_s.get() << std::endl;
+	Contribution_typed<std::string> contribution_s("Adam");
+	std::cout << contribution_s._content << std::endl;
 
-
-	Contribution_typed<int> contribution_i;
-	contribution_i.set(43);
-	std::cout << contribution_i.get() << std::endl;
+	Contribution_typed<int> contribution_i(43);
+	std::cout << contribution_i._content << std::endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -27,14 +24,12 @@ void test_func_02_02()
 	std::cout << "test_func_02_02" << std::endl;
 
 	std::shared_ptr<Contribution_typed<std::string>> p_s = 
-		std::make_shared<Contribution_typed<std::string>>();
-	p_s->set("Eva");
-	std::cout << p_s->get() << std::endl;
+		std::make_shared<Contribution_typed<std::string>>("Eva");
+	std::cout << p_s->_content << std::endl;
 
 	std::shared_ptr<Contribution_typed<int>> p_i = 
-		std::make_shared<Contribution_typed<int>>();
-	p_i->set(45);
-	std::cout << p_i->get() << std::endl;
+		std::make_shared<Contribution_typed<int>>(45);
+	std::cout << p_i->_content << std::endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -65,9 +60,8 @@ void test_func_02_04()
 {
 	std::cout << "--- test_func_02_04 ---" << std::endl;
 
-	auto p_s = std::make_shared<Contribution_typed<std::string>>();
-	p_s->set("Eva");
-	std::cout << p_s->get() << std::endl;
+	auto p_s = std::make_shared<Contribution_typed<std::string>>("Eva");
+	std::cout << p_s->_content << std::endl;
 
 	// static_pointer_cast to go up class hierarchy
 	std::shared_ptr<Contribution_basis> p_b = 
@@ -79,7 +73,7 @@ void test_func_02_04()
 		std::dynamic_pointer_cast<Contribution_typed<std::string>>(p_b);
     if(p_s_second != nullptr) { 
 		std::cout << "pointer on typed, call to: " << p_s_second->name() << std::endl;
-		std::cout << "pointer on typed, call to get: " << p_s_second->get() << std::endl;		
+		std::cout << "pointer on typed, call to get: " << p_s_second->_content << std::endl;		
     }
 }
 
@@ -89,9 +83,8 @@ void test_func_02_05()
 {
 	std::cout << "--- test_func_02_05 ---" << std::endl;
 
-	auto p_i = std::make_shared<Contribution_typed<int>>();
-	p_i->set(45);
-	std::cout << p_i->get() << std::endl;
+	auto p_i = std::make_shared<Contribution_typed<int>>(54);
+	std::cout << p_i->_content << std::endl;
 
 	// static_pointer_cast to go up class hierarchy
 	std::shared_ptr<Contribution_basis> p_b = 
@@ -103,7 +96,105 @@ void test_func_02_05()
 		std::dynamic_pointer_cast<Contribution_typed<int>>(p_b);
     if(p_i_second != nullptr) { 
 		std::cout << "pointer on typed, call to: " << p_i_second->name() << std::endl;
-		std::cout << "pointer on typed, call to get: " << p_i_second->get() << std::endl;		
+		std::cout << "pointer on typed, call to get: " << p_i_second->_content << std::endl;		
     }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void test_func_02_06()
+{
+	std::cout << "--- test_func_02_06 contribution map ---" << std::endl;
+
+	try	{
+
+		Contribution_map contribution_map;
+		contribution_map.setContribution("a_1", 42, "A_1");
+		
+		int value = contribution_map.getContribution<int>("a_1", "A_1");
+		std::cout << "value from container: " << value << std::endl;
+
+    } 
+	catch(const std::exception& e) {
+        std::cout << "Caught error meaning: " << e.what() << '\n';
+    }	
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void test_func_02_07()
+{
+	std::cout << "--- test_func_02_07 contribution map ---" << std::endl;
+
+	try	{
+
+		Contribution_map contribution_map;
+		contribution_map.setContribution("a_1", 42, "A_1");
+		contribution_map.setContribution("a_2", std::string("Eva"), "A_1");
+
+		int value_i = contribution_map.getContribution<int>("a_1", "A_1");
+		std::cout << "value int from container: " << value_i << std::endl;
+
+		std::string value_s = contribution_map.getContribution<std::string>("a_2", "A_1");
+		std::cout << "value string from container: " << value_s << std::endl;
+
+    } 
+	catch(const std::exception& e) {
+        std::cout << "Caught error meaning: " << e.what() << '\n';
+    }	
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void test_func_02_08()
+{
+	std::cout << "--- test_func_02_08 contribution map ---" << std::endl;
+
+	try	{
+
+		Contribution_map contribution_map;
+		contribution_map.setContribution("a_1", 42, "A_1");
+		contribution_map.setContribution("a_2", std::string("Eva"), "A_1");
+
+		int value_i = contribution_map.getContribution<int>("a_2", "A_1");
+		std::cout << "value int from container: " << value_i << std::endl;
+
+		std::string value_s = contribution_map.getContribution<std::string>("a_2", "A_1");
+		std::cout << "value string from container: " << value_s << std::endl;
+
+    } 
+	catch(const std::exception& e) {
+        std::cout << "Caught error meaning: " << e.what() << '\n';
+    }	
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void test_func_02_09()
+{
+	std::cout << "--- test_func_02_09 write to dick values from contribution map ---" << std::endl;
+
+	try	{
+
+		Contribution_map contribution_map;
+		contribution_map.setContribution("a_1", 42, "A_1");
+		contribution_map.setContribution("a_2", std::string("Eva"), "A_1");
+
+		int value_i = contribution_map.getContribution<int>("a_1", "A_1");
+		std::cout << "value int from container: " << value_i << std::endl;
+		std::string value_s = contribution_map.getContribution<std::string>("a_2", "A_1");
+		std::cout << "value string from container: " << value_s << std::endl;
+
+		const auto & storage = contribution_map.getContributions("A_1");
+
+		const boost::filesystem::path storage_path("/home/florin/tmp/storage_dir");
+		for (const auto & elem : storage) {
+			const boost::filesystem::path file_name = storage_path.string() + "/" + elem.first;
+			elem.second->writeTo(file_name);
+		}
+    } 
+	catch(const std::exception& e) {
+        std::cout << "Caught error meaning: " << e.what() << '\n';
+    }	
 }
 
