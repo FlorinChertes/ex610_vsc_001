@@ -32,7 +32,7 @@ void registerContributionFileType(Contribution_basis::FactoryType * factory)
     std::string extension = file_extension<T>();
 
     try {
-        factory->add<Contribution_typed<T> >(extension);
+        factory->add<Contribution_typed<T>>(extension);
     } catch(const std::logic_error &) {
         std::runtime_error("File extension " + extension + " cannot be used twice for contributions");
     }
@@ -117,11 +117,8 @@ void Contribution_derived::writeTo(const boost::filesystem::path & path)
 template<typename T>
 void Contribution_typed<T>::writeTo(const boost::filesystem::path & path)
 {
-    std::cout << "Write to disk using path: " << path << "\n";
     try {
-		boost::filesystem::path file_name_ext = path.string() + file_extension<T>();
-    	std::cout << "Write to disk using path: " << file_name_ext << "\n";		
-        writeToDisk(_content, file_name_ext);
+        write_to_disk<T>(_content, path.string() + file_extension<T>());
     } catch(const std::logic_error & e) {
         std::cout << "Failed to write " << path << ": " << e.what();
     }

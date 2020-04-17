@@ -134,10 +134,11 @@ private:
     mutable std::mutex							_mutex;
 };
 
-
-	void readContributions(Contribution_map &,
-						   const std::string & storage_name,
-						   const boost::filesystem::path &);
-	void writeContributions(const Contribution_map &,
-							const std::string & storage_name,
-	                        const boost::filesystem::path &);
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void readContributions(Contribution_map &,
+					   const std::string & storage_name,
+					   const boost::filesystem::path &);
+void writeContributions(const Contribution_map &,
+						const std::string & storage_name,
+                        const boost::filesystem::path &);

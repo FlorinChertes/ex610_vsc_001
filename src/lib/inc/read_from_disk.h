@@ -1,10 +1,8 @@
 #pragma once
 
 #include <boost/filesystem.hpp>
-
-#include <unordered_map>
+#include <string>
 #include <exception>
-
 
 /// Generic read from disk
 template<typename T>
