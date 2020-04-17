@@ -16,6 +16,9 @@ ELSE ()
 	set(BOOST_MIN_VERSION "1.54.0")
 	find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS serialization system filesystem REQUIRED)
 
+	include_directories(${Boost_INCLUDE_DIR})
+	link_directories(${Boost_LIBRARY_DIR})
+
 	add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 
 ENDIF () 
@@ -46,6 +49,13 @@ add_executable(ex610_vsc_001
 	src/lib/inc/write_to_disk.h
 	src/lib/src/write_to_disk.cpp
 
-	src/lib/inc/component.h
+	src/lib/inc/read_from_disk.h
+	src/lib/src/read_from_disk.cpp
 
+	src/lib/inc/component.h
+)
+
+target_link_libraries(ex610_vsc_001
+  ${Boost_FILESYSTEM_LIBRARY}
+  ${Boost_SYSTEM_LIBRARY}
 )

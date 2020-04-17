@@ -4,16 +4,13 @@
 
 #include <boost/filesystem.hpp>
 
-
 #include <unordered_map>
 #include <string>
 
 #include <iostream>
-
 #include <mutex>
 #include <exception>
 #include <memory>
-
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -24,12 +21,24 @@ public:
 	using Ptr = std::shared_ptr<Contribution_basis>;
 	using FactoryType = GenericFactory<Contribution_basis, std::string ,Ptr>;	
 
+	/// Get instance from factory and delegate to _readFrom
+    static Ptr readFrom(const boost::filesystem::path &);
+
 	virtual std::string to_string() const = 0;
-	virtual void writeTo(const boost::filesystem::path & path) = 0;
 
 	virtual std::string name() const { 
 		return "name: Contribution_basis"; 
 	}
+
+	virtual void writeTo(const boost::filesystem::path & path) = 0;
+
+	virtual ~Contribution_basis() {
+	}
+
+protected:
+
+    /// Fill this sequence contribution with directory contents
+    virtual void _readFrom(const boost::filesystem::path & path) = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -40,10 +49,14 @@ public:
 	std::string to_string() const {
 		return "Contribution_derived::to_string";
 	}
-	void writeTo(const boost::filesystem::path & path);
-
 
 	std::string name() const override;
+
+	void writeTo(const boost::filesystem::path & path);
+
+protected:
+    void _readFrom(const boost::filesystem::path &path) override {
+	}
 };
 
 //-----------------------------------------------------------------------------
@@ -56,21 +69,24 @@ public:
 	explicit Contribution_typed() {}	// needed for factory
 	explicit Contribution_typed(const T & c): _content(c) {}
 
-	std::string to_string() const 	{
+	std::string to_string() const {
 		const std::string s("Contribution_typed::to_string");
 		return s;
 	}
-
-	void writeTo(const boost::filesystem::path & path);
-
 	std::string name() const override { 
 		return "name: Contribution_typed"; 
 	} 
 
+	void writeTo(const boost::filesystem::path & path);
+
 	T _content; 
+
+protected:
+    void _readFrom(const boost::filesystem::path &path) override;
 };
 
-
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class Contribution_map
 {
 public:
@@ -104,12 +120,11 @@ public:
         return typedContribution->_content;
     }
 
-
-private:
-
 	void setContributionPtr(const std::string &key, 
 							const Contribution_basis::Ptr value, 
 							const std::string & storageName = defaultStorageName);
+
+private:
 
     Contribution_basis::Ptr getContributionPtr(const std::string &storageName, 
 											   const std::string & key) const;
@@ -117,8 +132,12 @@ private:
 
 	std::unordered_map<std::string, Storage>	_contributions;
     mutable std::mutex							_mutex;
-
 };
 
 
-
+	void readContributions(Contribution_map &,
+						   const std::string & storage_name,
+						   const boost::filesystem::path &);
+	void writeContributions(const Contribution_map &,
+							const std::string & storage_name,
+	                        const boost::filesystem::path &);

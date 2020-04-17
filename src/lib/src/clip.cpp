@@ -1,7 +1,7 @@
 #include <clip.h>
 
+#include <read_from_disk.h>
 #include <write_to_disk.h>
-
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -49,12 +49,47 @@ void Contribution_basis::FactoryType::init()
     registerContributionFileType<std::string>(this);
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+Contribution_basis::Ptr Contribution_basis::readFrom(const boost::filesystem::path & path)
+{
+    namespace fs = boost::filesystem;
+
+    Contribution_basis::Ptr instance = nullptr;
+
+    const auto file_name = path.filename().string();
+
+    const auto extensionStart = file_name.find('.');
+    if(extensionStart == std::string::npos) {
+        std::cout << "File " << path.string() << " has no extension.\n";
+        return nullptr;
+    }
+
+    const std::string ext = file_name.substr(extensionStart);
+
+    try {
+        static FactoryType factory;
+        instance = factory.create(ext);
+        instance->_readFrom(path);
+    } catch(const std::out_of_range & e) {
+        std::cout << "While reading from " << path << ": " <<  e.what() << std::endl;
+    }
+
+    return instance;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+template<typename T>
+void Contribution_typed<T>::_readFrom(const boost::filesystem::path &path)
+{
+    _content = readFromDisk<T>(path);
+}
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 using WriteLock = std::lock_guard<std::mutex>;
 using ReadLock = WriteLock; // Replace by shared_lock in c++17
-
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -79,7 +114,6 @@ void Contribution_derived::writeTo(const boost::filesystem::path & path)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-
 template<typename T>
 void Contribution_typed<T>::writeTo(const boost::filesystem::path & path)
 {
@@ -92,7 +126,6 @@ void Contribution_typed<T>::writeTo(const boost::filesystem::path & path)
         std::cout << "Failed to write " << path << ": " << e.what();
     }
 }
-
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -137,3 +170,43 @@ const Contribution_map::Storage & Contribution_map::getContributions(const std::
 Contribution_typed<int> temp_int(42);
 Contribution_typed<std::string> temp_string("Eva");
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void writeContributions(const Contribution_map & contributable,
+							  const std::string & storage_name,
+							  const boost::filesystem::path & storage_path)
+{
+    namespace fs = boost::filesystem;
+
+    if( fs::is_directory(storage_path) ) {
+        for(const auto & pair : contributable.getContributions(storage_name)) {
+
+            const auto & key = pair.first;
+            pair.second->writeTo(storage_path / key);
+        }
+    }
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void readContributions(Contribution_map & contributable,
+					   const std::string & storage_name,
+					   const boost::filesystem::path & storage_path)
+{
+    namespace fs = boost::filesystem;
+
+    if( fs::is_directory(storage_path) ) {
+        for(fs::directory_iterator it(storage_path); it != fs::directory_iterator(); ++it) {
+
+            const auto & path_name = it->path();
+
+            auto contribution_name = path_name.filename().string();
+            contribution_name = contribution_name.substr(0, contribution_name.find('.'));
+            auto contribution = Contribution_basis::readFrom(path_name);
+            if(contribution != nullptr) {
+                std::cout << "contribution exists: " << contribution_name << "\n";
+                contributable.setContributionPtr(contribution_name, contribution, storage_name);
+            }
+        }
+    }
+}

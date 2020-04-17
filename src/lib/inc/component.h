@@ -1,9 +1,6 @@
 #pragma once
 
-#include <memory>
-#include <sstream>
 #include <unordered_map>
-
 
 template<typename Base, 
 	typename KeyType, 
@@ -35,7 +32,6 @@ public:
         }
     }
 
-
     PointerType create(const KeyType & key, ConstructorArgs ... args)
     {
         auto it = _creators.find(key);
@@ -45,7 +41,6 @@ public:
         auto creator = *it->second;
         return PointerType (creator(args...));
     }
-
 
 private:
 

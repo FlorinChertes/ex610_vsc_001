@@ -172,7 +172,7 @@ void test_func_02_08()
 //-----------------------------------------------------------------------------
 void test_func_02_09()
 {
-	std::cout << "--- test_func_02_09 write to dick values from contribution map ---" << std::endl;
+	std::cout << "--- test_func_02_09 write to disk contribution map ---" << std::endl;
 
 	try	{
 
@@ -185,12 +185,12 @@ void test_func_02_09()
 		std::string value_s = contribution_map.getContribution<std::string>("a_2", "A_1");
 		std::cout << "value string from container: " << value_s << std::endl;
 
-		const auto & storage = contribution_map.getContributions("A_1");
+		const boost::filesystem::path	storage_path("/home/florin/tmp/storage_dir");
+		const std::string				storage_name("A_1");
 
-		const boost::filesystem::path storage_path("/home/florin/tmp/storage_dir");
-		for (const auto & elem : storage) {
-			const boost::filesystem::path file_name = storage_path.string() + "/" + elem.first;
-			elem.second->writeTo(file_name);
+		for (const auto & elem : contribution_map.getContributions(storage_name)) {
+			const auto & key = elem.first;
+			elem.second->writeTo(storage_path / key);
 		}
     } 
 	catch(const std::exception& e) {
@@ -198,3 +198,51 @@ void test_func_02_09()
     }	
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void test_func_02_10()
+{
+	std::cout << "--- test_func_02_10 write to disk contribution map ---" << std::endl;
+
+	try	{
+		Contribution_map contribution_map;
+		contribution_map.setContribution("a_1", 41, "A_1");
+		contribution_map.setContribution("a_2", std::string("Adam"), "A_1");
+
+		int value_i = contribution_map.getContribution<int>("a_1", "A_1");
+		std::cout << "value int from container: " << value_i << std::endl;
+		std::string value_s = contribution_map.getContribution<std::string>("a_2", "A_1");
+		std::cout << "value string from container: " << value_s << std::endl;
+
+		const boost::filesystem::path	storage_path("/home/florin/tmp/storage_dir");
+		const std::string				storage_name("A_1");
+		writeContributions(contribution_map, storage_name, storage_path);
+    }
+	catch(const std::exception& e) {
+        std::cout << "Caught error meaning: " << e.what() << '\n';
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void test_func_02_11()
+{
+	std::cout << "--- test_func_02_11 read from disk into contribution map ---" << std::endl;
+
+	try	{
+		Contribution_map contribution_map;
+
+		const boost::filesystem::path	storage_path("/home/florin/tmp/storage_dir");
+		const std::string				storage_name("A_1");
+		readContributions(contribution_map, storage_name, storage_path);
+
+		int value_i = contribution_map.getContribution<int>("a_1", "A_1");
+		std::cout << "value int from container: " << value_i << std::endl;
+		std::string value_s = contribution_map.getContribution<std::string>("a_2", "A_1");
+		std::cout << "value string from container: " << value_s << std::endl;
+    }
+	catch(const std::exception& e) {
+        std::cout << "Caught error meaning: " << e.what() << '\n';
+    }
+}
