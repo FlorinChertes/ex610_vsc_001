@@ -22,7 +22,7 @@ int main()
    test_func_02_05();
    test_func_02_06();
    test_func_02_07();
-   test_func_02_08();
+   test_func_02_09();
 
    test_func_02_10();
    test_func_02_11();

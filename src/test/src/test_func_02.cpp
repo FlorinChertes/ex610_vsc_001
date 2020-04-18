@@ -146,30 +146,6 @@ void test_func_02_07()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void test_func_02_08()
-{
-	std::cout << "--- test_func_02_08 contribution map ---" << std::endl;
-
-	try	{
-
-		Contribution_map contribution_map;
-		contribution_map.setContribution("a_1", 42, "A_1");
-		contribution_map.setContribution("a_2", std::string("Eva"), "A_1");
-
-		int value_i = contribution_map.getContribution<int>("a_2", "A_1");
-		std::cout << "value int from container: " << value_i << std::endl;
-
-		std::string value_s = contribution_map.getContribution<std::string>("a_2", "A_1");
-		std::cout << "value string from container: " << value_s << std::endl;
-
-    } 
-	catch(const std::exception& e) {
-        std::cout << "Caught error meaning: " << e.what() << '\n';
-    }	
-}
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
 void test_func_02_09()
 {
 	std::cout << "--- test_func_02_09 write to disk contribution map ---" << std::endl;
@@ -216,7 +192,7 @@ void test_func_02_10()
 
 #if defined (_MSC_VER)
 		const boost::filesystem::path	storage_path("E:/users/temp/tmp/storage_dir");
-#elif
+#else
 		const boost::filesystem::path	storage_path("/home/florin/tmp/storage_dir");
 #endif
 		const std::string				storage_name("A_1");
@@ -239,7 +215,7 @@ void test_func_02_11()
 
 #if defined (_MSC_VER)
 		const boost::filesystem::path	storage_path("E:/users/temp/tmp/storage_dir");
-#elif
+#else
 		const boost::filesystem::path	storage_path("/home/florin/tmp/storage_dir");
 #endif
 		const std::string				storage_name("A_1");

@@ -5,7 +5,7 @@ void test_func_02_04();
 void test_func_02_05();
 void test_func_02_06();
 void test_func_02_07();
-void test_func_02_08();
+
 void test_func_02_09();
 
 void test_func_02_10();
