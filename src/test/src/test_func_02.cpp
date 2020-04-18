@@ -214,7 +214,11 @@ void test_func_02_10()
 		std::string value_s = contribution_map.getContribution<std::string>("a_2", "A_1");
 		std::cout << "value string from container: " << value_s << std::endl;
 
+#if defined (_MSC_VER)
+		const boost::filesystem::path	storage_path("E:/users/temp/tmp/storage_dir");
+#elif
 		const boost::filesystem::path	storage_path("/home/florin/tmp/storage_dir");
+#endif
 		const std::string				storage_name("A_1");
 		writeContributions(contribution_map, storage_name, storage_path);
     }
@@ -233,7 +237,11 @@ void test_func_02_11()
 	try	{
 		Contribution_map contribution_map;
 
+#if defined (_MSC_VER)
+		const boost::filesystem::path	storage_path("E:/users/temp/tmp/storage_dir");
+#elif
 		const boost::filesystem::path	storage_path("/home/florin/tmp/storage_dir");
+#endif
 		const std::string				storage_name("A_1");
 		readContributions(contribution_map, storage_name, storage_path);
 

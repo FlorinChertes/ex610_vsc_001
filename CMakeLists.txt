@@ -9,10 +9,20 @@ IF (MSVC)
 	IF (NOT CMAKE_CXX_FLAGS MATCHES "/EHsc") 
 		SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 	ENDIF ()
+
+	message(STATUS "Setting up BOOST for CHFL")
+	SET(Boost_INCLUDE_DIR "E:/users/chfl/ms160_app/boost_1_72_0")
+	SET(Boost_LIBRARY_DIR "E:/users/chfl/ms160_app/boost_1_72_0/stage/lib")
+
+	include_directories(${Boost_INCLUDE_DIR})
+	link_directories(${Boost_LIBRARY_DIR})
+
+	add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 ELSE ()
 	SET(GCC_STD_CPP_2A_COMPILE_FLAGS "-std=c++2a")
 	SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_STD_CPP_2A_COMPILE_FLAGS}")
 
+	message(STATUS "Setting up BOOST for CHFL")
 	set(BOOST_MIN_VERSION "1.54.0")
 	find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS serialization system filesystem REQUIRED)
 
@@ -20,7 +30,6 @@ ELSE ()
 	link_directories(${Boost_LIBRARY_DIR})
 
 	add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
-
 ENDIF () 
 
 # include directories
