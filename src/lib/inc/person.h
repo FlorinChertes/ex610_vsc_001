@@ -13,8 +13,8 @@ public:
     Person& operator =(const Person& rhs);
     Person(const Person& other);
 
-    Person& operator =(Person&& rhs);
-    Person(Person&& other);
+    Person& operator =(Person&& rhs) noexcept;
+    Person(Person&& other) noexcept;
 
 
     void swap(Person& other);

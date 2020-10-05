@@ -24,14 +24,14 @@ Person::Person(const Person& other)
 {
 }
 
-Person& Person::operator =(Person&& rhs)
+Person& Person::operator =(Person&& rhs) noexcept
 {
     Person tmp(std::move(rhs));
     swap(tmp);
     return *this;
 }
 
-Person::Person(Person&& other)
+Person::Person(Person&& other) noexcept
     : m_first_name(std::move(other.m_first_name))
     , m_second_name(std::move(other.m_second_name))
 {
